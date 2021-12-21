@@ -8,6 +8,7 @@ firebase-debug.log*
 /functions/service-account.json
 /functions/src/service-account.json
 /scraps
+/server/lib
 
 *service-account.json
 
