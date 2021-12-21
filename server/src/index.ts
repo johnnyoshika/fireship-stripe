@@ -2,4 +2,7 @@ import { config } from 'dotenv';
 
 if (process.env.NODE_ENV !== 'production') config();
 
-console.log(process.env.STRIPE_SECRET);
+import Stripe from 'stripe';
+export const stripe = new Stripe(process.env.STRIPE_SECRET, {
+  apiVersion: '2020-08-27',
+});
