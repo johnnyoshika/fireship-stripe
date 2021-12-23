@@ -4,6 +4,7 @@ import {
   Route,
   Link,
 } from 'react-router-dom';
+import { Checkout, CheckoutSuccess, CheckoutFail } from './Checkout';
 
 function App() {
   return (
@@ -52,7 +53,7 @@ function App() {
         <main>
           <Switch>
             <Route path="/checkout">
-              <div>Checkout</div>
+              <Checkout />
             </Route>
             <Route path="/payments">
               <div>Payments</div>
@@ -64,10 +65,10 @@ function App() {
               <div>Subscriptions</div>
             </Route>
             <Route path="/success">
-              <div>CheckoutSuccess</div>
+              <CheckoutSuccess />
             </Route>
             <Route path="/failed">
-              <div>CheckoutFail</div>
+              <CheckoutFail />
             </Route>
             <Route path="/">
               <div>Home</div>
