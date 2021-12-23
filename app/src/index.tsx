@@ -4,11 +4,28 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { Elements } from '@stripe/react-stripe-js';
+
+// In order to be PCI compliant, we must load the latest JS from Stripe.
+// loadStripe will add a script tag to the head of the document.
+import { loadStripe } from '@stripe/stripe-js';
+
+if (!process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY)
+  throw new Error(
+    'REACT_APP_STRIPE_PUBLISHABLE_KEY env variable missing.',
+  );
+
+export const stripePromise = loadStripe(
+  process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY,
+);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Elements stripe={stripePromise}>
+      <App />
+    </Elements>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function
