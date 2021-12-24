@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import { FirebaseAppProvider } from 'reactfire';
+import { firebaseConfig } from './firebase';
 import { Elements } from '@stripe/react-stripe-js';
 
 // In order to be PCI compliant, we must load the latest JS from Stripe.
@@ -21,9 +22,11 @@ export const stripePromise = loadStripe(
 
 ReactDOM.render(
   <React.StrictMode>
-    <Elements stripe={stripePromise}>
-      <App />
-    </Elements>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+      <Elements stripe={stripePromise}>
+        <App />
+      </Elements>
+    </FirebaseAppProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
