@@ -5,6 +5,7 @@ import {
   Link,
 } from 'react-router-dom';
 import { Checkout, CheckoutSuccess, CheckoutFail } from './Checkout';
+import Customers from './Customers';
 import Payments from './Payments';
 
 function App() {
@@ -60,7 +61,7 @@ function App() {
               <Payments />
             </Route>
             <Route path="/customers">
-              <div>Customers</div>
+              <Customers />
             </Route>
             <Route path="/subscriptions">
               <div>Subscriptions</div>
