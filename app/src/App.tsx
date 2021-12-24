@@ -7,6 +7,7 @@ import {
 import { Checkout, CheckoutSuccess, CheckoutFail } from './Checkout';
 import Customers from './Customers';
 import Payments from './Payments';
+import Subscriptions from './Subscriptions';
 
 function App() {
   return (
@@ -64,7 +65,7 @@ function App() {
               <Customers />
             </Route>
             <Route path="/subscriptions">
-              <div>Subscriptions</div>
+              <Subscriptions />
             </Route>
             <Route path="/success">
               <CheckoutSuccess />
