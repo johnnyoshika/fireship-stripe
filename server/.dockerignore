@@ -1,0 +1,11 @@
+**/.dockerignore
+**/.env*
+**/.git
+**/.gitignore
+**/.vscode
+**/Dockerfile*
+**/node_modules
+**/npm-debug.log
+**/service-account.json
+LICENSE
+README.md
