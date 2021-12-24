@@ -5,6 +5,11 @@ import { createPaymentIntent } from './payments';
 import { handleStripeWebhook } from './webhooks';
 import { auth } from './firebase';
 import { createSetupIntent, listPaymentMethods } from './customers';
+import {
+  cancelSubscription,
+  createSubscription,
+  listSubscriptions,
+} from './billing';
 export const app = express();
 
 // modify express.json middle to add rawBody buffer to the request
@@ -86,6 +91,42 @@ app.get(
 
     const wallet = await listPaymentMethods(user.uid);
     res.send(wallet.data);
+  }),
+);
+
+// Create a and charge new Subscription
+app.post(
+  '/subscriptions/',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    const { plan, payment_method } = req.body;
+    const subscription = await createSubscription(
+      user.uid,
+      plan,
+      payment_method,
+    );
+    res.send(subscription);
+  }),
+);
+
+// Get all subscriptions for a customer
+app.get(
+  '/subscriptions/',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+
+    const subscriptions = await listSubscriptions(user.uid);
+
+    res.send(subscriptions.data);
+  }),
+);
+
+// Unsubscribe or cancel a subscription
+app.patch(
+  '/subscriptions/:id',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    res.send(await cancelSubscription(user.uid, req.params.id));
   }),
 );
 
