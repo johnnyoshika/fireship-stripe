@@ -3,6 +3,8 @@ import cors from 'cors';
 import { createStripeCheckoutSession } from './checkout';
 import { createPaymentIntent } from './payments';
 import { handleStripeWebhook } from './webhooks';
+import { auth } from './firebase';
+import { createSetupIntent, listPaymentMethods } from './customers';
 export const app = express();
 
 // modify express.json middle to add rawBody buffer to the request
@@ -14,6 +16,37 @@ app.use(
 );
 
 app.use(cors({ origin: true }));
+
+app.use(decodeJWT);
+
+async function decodeJWT(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  if (req.headers?.authorization?.startsWith('Bearer ')) {
+    const idToken = req.headers.authorization.split('Bearer ')[1];
+
+    try {
+      req['currentUser'] = await auth.verifyIdToken(idToken);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  next();
+}
+
+function validateUser(req: Request) {
+  const user = req['currentUser'];
+  if (!user) {
+    throw new Error(
+      'You must be logged in to make this request. i.e Authorization: Bearer <token>',
+    );
+  }
+
+  return user;
+}
 
 function runAsync(callback: Function) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -32,6 +65,27 @@ app.post(
   '/payments',
   runAsync(async ({ body }: Request, res: Response) => {
     res.send(await createPaymentIntent(body.amount));
+  }),
+);
+
+// Save a card on the customer record with a SetupIntent
+app.post(
+  '/wallet',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+    const setupIntent = await createSetupIntent(user.uid);
+    res.send(setupIntent);
+  }),
+);
+
+// Retrieve all cards attached to a customer
+app.get(
+  '/wallet',
+  runAsync(async (req: Request, res: Response) => {
+    const user = validateUser(req);
+
+    const wallet = await listPaymentMethods(user.uid);
+    res.send(wallet.data);
   }),
 );
 
