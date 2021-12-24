@@ -5,6 +5,7 @@ import {
   Link,
 } from 'react-router-dom';
 import { Checkout, CheckoutSuccess, CheckoutFail } from './Checkout';
+import Payments from './Payments';
 
 function App() {
   return (
@@ -56,7 +57,7 @@ function App() {
               <Checkout />
             </Route>
             <Route path="/payments">
-              <div>Payments</div>
+              <Payments />
             </Route>
             <Route path="/customers">
               <div>Customers</div>
